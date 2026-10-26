@@ -1,0 +1,71 @@
+# EuroSys 2027, fall cycle: the settings of the production assignment.
+name: eurosys27-fall              # the run directory is runs/<name>/
+
+inputs:                           # HotCRP downloads, see README.md
+  pcinfo: inputs/eurosys27-fall-pcinfo.csv
+  extra_pcinfo: inputs/eurosys27-extra-pcinfo.csv
+  papers: inputs/eurosys27-fall-data.json
+  authors: inputs/eurosys27-fall-authors.csv
+
+curated:                          # manual overrides. optional
+  dblp_placements: curated/dblp_placements.csv
+  fingerprint_overrides: curated/fingerprint_overrides.csv
+  cap_overrides: curated/cap_overrides.csv
+  swaps: curated/swaps.csv        # applied last. leave empty for none
+
+caches:                           # shared between runs, frozen into each run
+  dblp: cache/dblp_orcid_cache.json
+  abstracts: cache/openalex_abstracts.json
+  authors: cache/dblp_author_orcids.json
+
+exclude_tags: [fall0]             # accounts tagged fall0 take no papers this cycle
+exclude_papers: []                # paper IDs to leave out, e.g. a test submission
+
+fingerprints:
+  years: 4                        # DBLP papers of the last 4 calendar years
+  fallback_papers: 10             # none in that window: the 10 most recent ...
+  fallback_years: 6               # ... of the last 6 years
+
+caps:                             # papers per reviewer
+  pc: 4
+  extra: 5
+  extra_by_submissions: {2: 7, 3: 8}  # an extra reviewer authoring 2 (3+) submissions takes 7 (8)
+
+assignment:
+  reviewers_per_paper: 4
+  max_extra_per_paper: 3          # so at least 1 PC member per paper
+  max_pc_per_paper: 3
+  same_country_cap: 1             # reviewers from the paper's majority-author country
+  coauthor_years: 5               # co-authorship this recent is a conflict
+  topic_veto: -2                  # never assign a paper with a topic the reviewer rated -2
+  weak_pair_below: 0.92           # swap reviewers off pairs below this similarity
+
+tpms:                             # the TPMS files, see README.md. Written to runs/<name>/tpms/
+  papers: inputs/eurosys27-fall-papers.zip
+  pcconflicts: inputs/eurosys27-fall-pcconflicts.csv
+  chairs: curated/chairs.csv                # optional. left out of the conflicts, no papers
+  email_changes: curated/email_changes.csv  # optional. old_email,new_email
+  limits:                         # papers per PC member, by HotCRP tag. first match wins
+    - {tag: fall0, min: 0, max: 0}
+  default_limits: {min: 4, max: 5}  # an account no rule names
+  extra_pcconflicts: inputs/eurosys27-extra-pcconflicts.csv  # the extra reviewers' conflicts
+  extra_limits: {min: 5, max: 6}  # every extra reviewer (from runs/<name>/reserve/)
+
+deskreject:                       # the desk-reject check, see README.md. Written to runs/<name>/deskreject/
+  papers: inputs/eurosys27-fall-data-before-desk-reject.json  # the paper JSON at the deadline
+  formatcheck: inputs/eurosys27-fall-formatcheck.csv
+  exemptions: curated/reserve_exemptions.csv  # paper: reserve reviewer exemptions the chairs approved
+  decisions: curated/desk_rejects.csv         # flagged.csv with Decision filled in
+  max_submissions: 3              # an author on more submissions than this is flagged
+  margin_over: 5                  # margins too small by more than 5% are serious
+
+reserve:                          # the reserve reviewers, from inputs.papers. Written to runs/<name>/reserve/
+  field: Reserve reviewer         # the submission field naming the reserve reviewer
+  decisions: curated/reserve_decisions.csv  # reserve_reviewers.csv with Decision filled in
+  cache: cache/reserve            # ORCID, ROR and OpenAlex responses
+
+conflicts:                        # HotCRP conflict uploads, see README.md. Written to runs/<name>/conflicts/
+  pc_page: inputs/eurosys27-fall-conflicts.html      # Assignments -> Conflicts on the PC site, saved as HTML
+  extra_page: inputs/eurosys27-extra-conflicts.html  # the same page on the extra reviewers' site
+  extra_pcconflicts: inputs/eurosys27-extra-pcconflicts.csv  # the extra reviewers' conflicts HotCRP has
+  affiliation_terms: curated/affiliation_terms.csv   # affiliation,terms: search terms for one affiliation
