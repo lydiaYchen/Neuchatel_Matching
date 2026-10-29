@@ -1,6 +1,6 @@
-# EuroSys 2027 reviewer assignment
+# Nechatel Matching Systems
 
-Assigns reviewers to submissions for **EuroSys 2027**, starting from nothing but HotCRP downloads. Output is files ready for upload into HotCRP. It was used for the fall 2027 cycle and written for EuroSys 2027 based on HPMAC-2027's algorithm. It is (currently) not a general conference tool.
+Based on the HPCA'27 matching system, the Neuchatel matching system was developed for EuroSys 2027 Fall to handle a doubling of paper submissions. Starting from raw HotCRP downloads, it generates formatted files ready for direct upload back into HotCRP. While its current pipeline and implementation details are tailored specifically for EuroSys 2027 rather than structured as a general-purpose tool, it can easily be adapted for other conferences.
 
 The matching in short: every reviewer and every paper gets a SPECTER2
 "fingerprint" (a vector summarising their research with similar research giving similar vectors). Reviewers are identified by DBLP page, found by the ORCID in their HotCRP profile. Pairs with a conflict of interest are removed. The remaining pairs are matched by similarity, within per-reviewer loads and per-paper limits.
